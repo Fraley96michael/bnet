@@ -11,17 +11,18 @@ import AddIcon from "@material-ui/icons/Add";
 import ForumIcon from "@material-ui/icons/Forum";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { useStateValue } from "./StateProvider";
+
 function Header() {
+  const [{ user }, dispatch] = useStateValue();
+
   return (
     <div className="header">
       <div className="header__left">
-        <img
-          src="https://image.shutterstock.com/image-photo/man-hip-hop-dancer-bboy-260nw-1752496451.jpg"
-          alt=""
-        />
+        <img src={user.photoUrl} alt="" />
         <div className="header__input">
           <SearchIcon />
-          <input placeholder="Search Bnet" type="text" />
+          <input type="text" placeholder="Search Bnet" />
         </div>
       </div>
       <div className="header__center">
@@ -43,21 +44,21 @@ function Header() {
       </div>
       <div className="header__right">
         <div className="header__info">
-          <Avatar />
-          <h4>Michael Fraley</h4>
-          <IconButton>
-            <AddIcon />
-          </IconButton>
-          <IconButton>
-            <ForumIcon />
-          </IconButton>
-          <IconButton>
-            <NotificationsActiveIcon />
-          </IconButton>
-          <IconButton>
-            <ExpandMoreIcon />
-          </IconButton>
+          <Avatar src={user.photoURL} />
+          <h4>{user.displayName}</h4>
         </div>
+        <IconButton>
+          <AddIcon />
+        </IconButton>
+        <IconButton>
+          <ForumIcon />
+        </IconButton>
+        <IconButton>
+          <NotificationsActiveIcon />
+        </IconButton>
+        <IconButton>
+          <ExpandMoreIcon />
+        </IconButton>
       </div>
     </div>
   );

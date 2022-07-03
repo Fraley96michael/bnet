@@ -4,17 +4,34 @@ import "./MessageSender.css";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
+import { useStateValue } from "./StateProvider";
+import * as firestore from "firebase/firestore";
+
+import db from "./firebase";
+import { serverTimestamp } from "firebase/firestore";
 
 function MessageSender() {
+  const [{ user }, dispatch] = useStateValue();
   const [input, setInput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  console.log(user);
   const handleSubmit = (e) => {
     e.preventDefault();
+    firestore.addDoc(firestore.collection(db, "posts"), {
+      message: input,
+      timestamp: serverTimestamp(),
+      username: user.displayName,
+      image: imageUrl,
+      profilePic: user.photoURL,
+    });
+
+    setInput("");
+    setImageUrl("");
   };
   return (
     <div className="messageSender">
       <div className="messageSender__top">
-        <Avatar />
+        <Avatar src={user.photoURL} />
         <form>
           <input
             value={input}
@@ -33,16 +50,16 @@ function MessageSender() {
         </form>
       </div>
 
-      <div class="messageSender__bottom">
-        <div class="messageSender__option">
+      <div className="messageSender__bottom">
+        <div className="messageSender__option">
           <VideocamIcon style={{ color: "red" }} />
           <h3>Live Video</h3>
         </div>
-        <div class="messageSender__option">
+        <div className="messageSender__option">
           <PhotoLibraryIcon style={{ color: "green" }} />
           <h3>Photo/Video</h3>
         </div>
-        <div class="messageSender__option">
+        <div className="messageSender__option">
           <InsertEmoticonIcon style={{ color: "orange" }} />
           <h3>Feeling/Activity</h3>
         </div>
