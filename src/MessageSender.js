@@ -1,28 +1,26 @@
-import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
+import { Avatar } from "@material-ui/core";
 import "./MessageSender.css";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import { useStateValue } from "./StateProvider";
-import * as firestore from "firebase/firestore";
-
 import db from "./firebase";
-import { serverTimestamp } from "firebase/firestore";
+import firebase from "firebase/compat/app";
 
 function MessageSender() {
   const [{ user }, dispatch] = useStateValue();
   const [input, setInput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  console.log(user);
   const handleSubmit = (e) => {
     e.preventDefault();
-    firestore.addDoc(firestore.collection(db, "posts"), {
+
+    db.collection("posts").add({
       message: input,
-      timestamp: serverTimestamp(),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      profilePic: user.photoURL,
       username: user.displayName,
       image: imageUrl,
-      profilePic: user.photoURL,
     });
 
     setInput("");

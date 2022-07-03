@@ -4,33 +4,22 @@ import "./Login.css";
 import { auth, provider } from "./firebase";
 import { actionTypes } from "./Reducer";
 import { useStateValue } from "./StateProvider";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 function Login() {
   const [state, dispatch] = useStateValue();
+
   const signIn = () => {
-    signInWithPopup(auth, provider)
+    // sign In
+    auth
+      .signInWithPopup(provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
         dispatch({
           type: actionTypes.SET_USER,
-          user,
+          user: result.user,
         });
+        console.log(result.user);
       })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
+      .catch((error) => alert(error.message));
   };
 
   return (
